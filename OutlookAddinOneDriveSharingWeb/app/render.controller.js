@@ -12,6 +12,7 @@
 * @param {Object} shareButton - A button that handles the event when the user wants to share the URL with all recipients.
 * @param {Object} uiSpinner - Progress meter.
 * @param {Object} permissionsToBeGranted - A list of emails to grant permissions to a OneDrive item.
+* @param {Object} myErrorSection - A section that will display errors in a more readable way.
 * @param {Object} personaTemplate - Display of emails and permission level.
 * @param {Object} messageTemplate - Display message.
 */
@@ -20,8 +21,10 @@ var Renderer = (function () {
     function Renderer() {
         this.peopleWithPermissionsContainer = document.getElementById("sharedWith");
         this.peopleWithoutPermissionsContainer = document.getElementById("shareWith");
+        this.myErrorContainer = document.getElementById("error");
         this.peopleWithPermissionsSection = document.getElementById("sharedWithSection");
         this.peopleWithoutPermissionsSection = document.getElementById("shareWithSection");
+        this.myErrorSection = document.getElementById("errorSection");
         this.shareButton = document.getElementById('setPermissionsToAll');
         this.uiSpinner = document.getElementById('progress');
 
@@ -68,8 +71,18 @@ var Renderer = (function () {
         this.permissionsToBeGranted = [];
         this.clearSharedWithContainer();
         this.clearShareWithContainer("We're looking for recipients and files in your message.");
+        this.hideErrorSection();
         this.hideShareButton();
         this.hideSharedWithSection();
+    }
+
+    Renderer.prototype.errorMessage = function (error) {
+        this.permissionsToBeGranted = [];
+        this.clearSharedWithContainer();
+        this.clearShareWithContainer();
+        this.hideShareButton();
+        this.hideSharedWithSection();
+        this.clearErrorContainer(error);
     }
 
     Renderer.prototype.hideShareButton = function () {
@@ -97,9 +110,19 @@ var Renderer = (function () {
         $(this.peopleWithoutPermissionsSection).show();
     }
 
-    Renderer.prototype.showShareButton = function () {
+    Renderer.prototype.hideErrorSection = function () {
+        $(this.myErrorSection).hide();
+    }
+
+    Renderer.prototype.showErrorSection = function () {
+        $(this.myErrorSection).show();
+    }
+
+    // already defined
+/*    Renderer.prototype.showShareButton = function () {
         $(this.shareButton).show();
     }
+*/
 
     Renderer.prototype.showProgress = function (promise) {
         var self = this;
@@ -124,6 +147,10 @@ var Renderer = (function () {
 
     Renderer.prototype.clearShareWithContainer = function (message) {
         this.peopleWithoutPermissionsContainer.innerHTML = message ? this.messageTemplate.replace('{{message}}', message) : "";
+    }
+
+    Renderer.prototype.clearErrorContainer = function (message) {
+        this.myErrorContainer.innerHTML = message ? this.messageTemplate.replace('{{message}}', message) : "";
     }
 
     Renderer.prototype.renderPeopleAccessLevels = function (recipients) {
@@ -189,6 +216,8 @@ var Renderer = (function () {
         }
 
         if (error.hasOwnProperty('statusText')) {
+            this.hideShareWithSection();
+            this.errorMessage("There was an error.");
             throw error;
         }
 

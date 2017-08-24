@@ -103,7 +103,11 @@
                 });
             })
 
-            if (Object.keys(allRecipients).length == 0) throw "We couldn't find any recipients."
+            if (Object.keys(allRecipients).length == 0) {
+                //renderingContext.hideShareWithSection();
+                renderingContext.errorMessage("We couldn't find any recipients.");
+                throw "We couldn't find any recipients."
+            }
 
             return allRecipients;
         });
@@ -137,9 +141,13 @@
     }
 
     
-    // Check the link to see if its shared with any recipients.
+    // Check/ the link to see if its shared with any recipients.
     function checkLinksForPermissions(links, recipients) {
-        if (!links) throw "We couldn't find any links";
+        if (!links) {
+            //renderingContext.hideShareWithSection();
+            renderingContext.errorMessage("We couldn't find any links.");
+            throw "We couldn't find any links";
+        }
 
         shareContexts = links.map(function (link) {
             if (link != null) {
@@ -152,14 +160,21 @@
     
     // Renders the display.
     function renderUIElements() {
-        if (!shareContexts || shareContexts.length == 0) throw "We couldn't find any links or people."
-
-        var currentView = shareContexts[0];
+        //if (!shareContexts || shareContexts.length == 0) throw "We couldn't find any links or people."
 
         // TODO: Add a dropdown selector to switch currentView.
 
-        renderingContext.clearUI();
-        return renderingContext.renderUI(currentView);
+        if (!shareContexts || shareContexts.length == 0) {
+            //renderingContext.hideShareWithSection();
+            renderingContext.errorMessage("We couldn't find any links or people.");
+            throw "We couldn't find any links or people";
+        }
+        else {
+            var currentView = shareContexts[0];
+            renderingContext.clearUI();
+            return renderingContext.renderUI(currentView);
+        }
+        //return renderingContext.renderUI(currentView);
     }
 
     function handleError(error) {
