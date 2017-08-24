@@ -105,7 +105,6 @@
 
             if (Object.keys(allRecipients).length == 0) {
                 //renderingContext.hideShareWithSection();
-                renderingContext.errorMessage("We couldn't find any recipients.");
                 throw "We couldn't find any recipients."
             }
 
@@ -145,8 +144,7 @@
     function checkLinksForPermissions(links, recipients) {
         if (!links) {
             //renderingContext.hideShareWithSection();
-            renderingContext.errorMessage("We couldn't find any links.");
-            throw "We couldn't find any links";
+            throw "We couldn't find any links.";
         }
 
         shareContexts = links.map(function (link) {
@@ -166,8 +164,7 @@
 
         if (!shareContexts || shareContexts.length == 0) {
             //renderingContext.hideShareWithSection();
-            renderingContext.errorMessage("We couldn't find any links or people.");
-            throw "We couldn't find any links or people";
+            throw "We couldn't find any links or people.";
         }
         else {
             var currentView = shareContexts[0];
@@ -178,6 +175,7 @@
     }
 
     function handleError(error) {
+        renderingContext.errorMessage(error);
         console.error(error);
     }
 })();
