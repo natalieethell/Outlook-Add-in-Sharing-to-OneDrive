@@ -71,7 +71,6 @@ var Renderer = (function () {
         this.permissionsToBeGranted = [];
         this.clearSharedWithContainer();
         this.clearShareWithContainer("We're looking for recipients and files in your message.");
-        this.hideErrorSection();
         this.hideShareButton();
         this.hideSharedWithSection();
     }
@@ -117,12 +116,6 @@ var Renderer = (function () {
     Renderer.prototype.showErrorSection = function () {
         $(this.myErrorSection).show();
     }
-
-    // already defined
-/*    Renderer.prototype.showShareButton = function () {
-        $(this.shareButton).show();
-    }
-*/
 
     Renderer.prototype.showProgress = function (promise) {
         var self = this;
@@ -217,7 +210,6 @@ var Renderer = (function () {
 
         if (error.hasOwnProperty('statusText')) {
             this.hideShareWithSection();
-            this.errorMessage("There was an error.");
             throw error;
         }
 
